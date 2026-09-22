@@ -1,0 +1,52 @@
+# Unity generated files
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Mm]emoryCaptures/
+[Rr]ecordings/
+Assets/SceneDependencyCache/
+
+# IDE and local tooling
+.vs/
+.idea/
+.vscode/
+.agents/
+.claude/
+.codex/
+.codex_tools/
+**/.VSCodeCounter/
+*.csproj
+*.sln
+*.suo
+*.user
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+*.log
+.DS_Store
+Thumbs.db
+
+# Local credentials and packages
+.env
+.env.*
+*.keystore
+*.jks
+*.pfx
+*.p12
+*.unitypackage
+
+# Art/audio/plugin dependencies are restored locally
+Assets/ThirdParty/
+Assets/ThirdParty.meta
+Assets/ThirdPartySources/
+Assets/ThirdPartySources.meta
+Assets/Models/
+Assets/Models.meta
