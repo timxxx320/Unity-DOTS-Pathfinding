@@ -18,11 +18,11 @@
 
 ## 主要实现
 
-- **网格预处理**：Unity Physics OverlapBox 检测障碍物与惩罚区域；横纵可分离箱式滤波结合滑动窗口平滑惩罚值；BFS 洪水填充标记连通区域。
-- **请求调度与 A***：请求队列限制每帧提交数量；独立寻路 Entity 保存起终点、结果及路径 Buffer；IJobParallelFor 与 Burst 执行寻路，NativeMinHeap 维护 Open Set，支持替代终点和 GoToClosest 回退。
-- **KD-Tree 构建与 KNN 查询**：最长轴与滑动中点划分，双指针重排点索引；最小堆按节点 AABB 距离下界访问，最大堆维护 K 个候选并用于剪枝。
-- **ORCA 避障**：根据邻居快照构造 ORCA Line；在最大速度圆内增量求解最接近期望速度的速度；约束冲突时构造 ProjectedLine，降低最大违反量。
-- **移动应用**：根据路径目标节点生成期望速度，统一计算所有代理的速度后，再进行前向射线检测并更新位置和朝向。
+- **A* 寻路算法**：实现 A* 算法与手写 NativeMinHeap 最小堆，支持障碍物惩罚避让、BFS 替代终点及 GoToClosest 回退策略；通过 IJobParallelFor Job 与 Burst 并行计算寻路请求。
+- **网格构建系统**：基于 Unity Physics OverlapBox 扫描网格障碍物并标记节点状态；采用可分离箱式滤波平滑扩散节点惩罚值；通过 BFS 洪水填充算法给节点标记连通岛屿 ID，在寻路前预检测起点与终点的连通性。
+- **KD-Tree 构建与查询**：构建 KD-Tree，为所有代理划分空间，并通过 KD-Tree 查询每个代理最近的 K 个邻居，为后续 ORCA 避障提供邻居数据。
+- **ORCA 多代理避障**：为邻居构造 ORCA Line，通过增量线性规划求解最优避障速度；约束冲突时构造 ProjectedLine，压低最大违反量并求出折中速度。
+- **ECS 架构设计**：采用 Unity ECS 组件化设计，通过 PathfindingRequestSystem（寻路请求入队）→ PathfindingSystem（并行计算 A* 路径）→ AgentMovementSystem（路径跟随与 ORCA 避障移动），实现多代理寻路与移动。
 
 ## 系统流程
 
@@ -62,7 +62,3 @@ flowchart TD
 5. 也可以查看 `Assets/Athomield/AStar/Demos/CircleOfAgents/COA.unity` 的场景配置与对应 SubScene。
 
 邻居数量、最大速度、障碍配置会影响避障效果；约束冲突时得到的是折中速度，不代表所有约束都能同时满足。仓库不提供未经测量的帧率或零分配保证。本次发布核对了文件与依赖清单，未在清洁环境中完成 Unity 导入和运行测试。
-
-## 来源
-
-本地初始工程的 Git 来源为 [suanDumplings/AStar](https://github.com/suanDumplings/AStar)，本仓库整理当前学习与迭代版本，并保留 `Athomield.AStar` 命名空间。原有代码、算法参考与第三方依赖的权利归相应作者；本仓库未额外授予统一开源许可。
